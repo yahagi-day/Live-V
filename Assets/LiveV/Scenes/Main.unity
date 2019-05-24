@@ -155,8 +155,6 @@ MonoBehaviour:
     type: 3}
   prefabsNeedsActivation:
   - {fileID: 100006, guid: a5b3beeee6fe8a845bcea1a5a837a753, type: 3}
-  prefabsOnTimeLine: {fileID: 9144967541576978021, guid: fdebe2192ce226a4da52c0c168d84cff,
-    type: 3}
   miscPrefabs:
   - {fileID: 4554996663875175254, guid: c54eed7a305b53b48abdf02f6631e58d, type: 3}
   - {fileID: 391854073620853728, guid: e45d7db5cd02f5841b963e2cfe0b2184, type: 3}
@@ -190,7 +188,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 946484553}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: e5416f4160b0b974aab17dcf0054f465, type: 2}
   m_CullingMode: 0

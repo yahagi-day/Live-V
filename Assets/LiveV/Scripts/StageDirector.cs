@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UniRx.Async;
 using VRM;
 
 namespace Live_V
@@ -10,7 +11,7 @@ namespace Live_V
         public GameObject MusicPlayer;
         public GameObject MainCameraRig;
         public GameObject[] prefabsNeedsActivation;
-        public GameObject prefabsOnTimeLine;
+        //public GameObject VRMAvater;
         public GameObject[] miscPrefabs;
         public GameObject LipSync;
 
@@ -23,10 +24,10 @@ namespace Live_V
         GameObject musicPlayer;
         CameraSwitcher mainCameraSwitcher;
         GameObject[] objectsNeedsActivation;
-        GameObject objectsOnTimeline;
+        GameObject VRMAvaterController;
         GameObject LipsSyncContoller;
 
-        private void Awake()
+        private async UniTask Awake()
         {
             //PrefabをInstantiateするよ!!
             musicPlayer = (GameObject)Instantiate(MusicPlayer);
@@ -39,14 +40,34 @@ namespace Live_V
             for (var i = 0; i < prefabsNeedsActivation.Length; i++)
                 objectsNeedsActivation[i] = (GameObject)Instantiate(prefabsNeedsActivation[i]);
 
-            objectsOnTimeline = (GameObject)Instantiate(prefabsOnTimeLine);
+            VRMAvaterController = await LoadVRMAvater();
 
             LipsSyncContoller = (GameObject)Instantiate(LipSync);
-            LipsSyncContoller.GetComponent<LipSyncController>().target = objectsOnTimeline.GetComponent<VRMBlendShapeProxy>();
-
+            LipsSyncContoller.GetComponent<LipSyncController>().target = VRMAvaterController.GetComponent<VRMBlendShapeProxy>();
 
             foreach (var p in miscPrefabs) Instantiate(p);
+
+            GetComponent<Animator>().enabled = true;
             
+        }
+
+        public async UniTask<GameObject> LoadVRMAvater()
+        {
+            var path = Application.streamingAssetsPath + "/Avater/model.vrm";
+            Debug.Log(path);
+            var www = new WWW(path);
+
+            await www;
+
+            var go = await VRMImporter.LoadVrmAsync(www.bytes);
+            go.AddComponent<Blinker>();
+            go.AddComponent<FaceUpdate>();
+            var animator = go.GetComponent<Animator>();
+            animator.applyRootMotion = true;
+            animator.runtimeAnimatorController = (RuntimeAnimatorController)Instantiate(Resources.Load("MocapC86"));
+            go.SetLayerRecursively(8);
+
+            return go;
         }
 
         public void StartMusic()
@@ -112,6 +133,25 @@ namespace Live_V
             //Application.LoadLevel(0);
             //SceneManager.LoadScene(0);
         }
+
     }
 
+    public static class GameObjectExtensions
+    {
+        /// <summary>
+        /// 自分自身を含むすべての子オブジェクトのレイヤーを設定します
+        /// </summary>
+        public static void SetLayerRecursively(
+            this GameObject self,
+            int layer
+        )
+        {
+            self.layer = layer;
+
+            foreach (Transform n in self.transform)
+            {
+                SetLayerRecursively(n.gameObject, layer);
+            }
+        }
+    }
 }
