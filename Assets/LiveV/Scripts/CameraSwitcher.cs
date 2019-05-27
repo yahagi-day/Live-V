@@ -17,7 +17,7 @@ public class CameraSwitcher : MonoBehaviour
     Vector3 followPoint;
     Animator humanoid;
 
-    void Start()
+    void Awake()
     {
         // Target information.
         humanoid = vrm.GetComponent<Animator>();
