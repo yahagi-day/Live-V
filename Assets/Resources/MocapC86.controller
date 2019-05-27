@@ -528,7 +528,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ef86414642165f24fa0219436d02a9f5, type: 2}
+  m_Motion: {fileID: 7400000, guid: 289ec39a719278c40aa93fbab246b828, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -556,7 +556,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ab275f6330dd8a249b4cd073f269417a, type: 2}
+  m_Motion: {fileID: 7400000, guid: f641e8088d5972b468c9fe5457cc077e, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -584,7 +584,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ed0efae984adadd45846eb78de34a658, type: 2}
+  m_Motion: {fileID: 7400000, guid: 4a5d2d624a65daa4a9c8cf5164951049, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -612,7 +612,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ef86414642165f24fa0219436d02a9f5, type: 2}
+  m_Motion: {fileID: 7400000, guid: 289ec39a719278c40aa93fbab246b828, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -640,7 +640,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: b0512c2f225744349b4ef5d51f5e5fea, type: 2}
+  m_Motion: {fileID: 7400000, guid: c3e95622502f40342a4c7eb48816689d, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -668,7 +668,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ef86414642165f24fa0219436d02a9f5, type: 2}
+  m_Motion: {fileID: 7400000, guid: 289ec39a719278c40aa93fbab246b828, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -691,7 +691,7 @@ AnimatorStateMachine:
     m_Position: {x: 420, y: -50, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110276754}
-    m_Position: {x: 648, y: -48, z: 0}
+    m_Position: {x: 650, y: -50, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

@@ -42,6 +42,9 @@ namespace Live_V
 
             VRMAvaterController = await LoadVRMAvater();
 
+            mainCameraSwitcher.GetComponentInChildren<CameraSwitcher>().vrm = VRMAvaterController;
+            cameraRig.SetActive(true);
+
             LipsSyncContoller = (GameObject)Instantiate(LipSync);
             LipsSyncContoller.GetComponent<LipSyncController>().target = VRMAvaterController.GetComponent<VRMBlendShapeProxy>();
 
@@ -53,7 +56,8 @@ namespace Live_V
 
         public async UniTask<GameObject> LoadVRMAvater()
         {
-            var path = Application.streamingAssetsPath + "/Avater/model.vrm";
+            //var path = Application.streamingAssetsPath + "/Avater/model.vrm";
+            var path = VRMLoadUniRx.GetVRMPath();
             Debug.Log(path);
             var www = new WWW(path);
 
@@ -132,6 +136,7 @@ namespace Live_V
         {
             //Application.LoadLevel(0);
             //SceneManager.LoadScene(0);
+            screenoverlays.enabled = true;
         }
 
     }
