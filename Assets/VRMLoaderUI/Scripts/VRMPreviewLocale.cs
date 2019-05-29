@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
+using UniRx.Async;
 
 namespace VRMLoader
 {
@@ -43,15 +45,25 @@ namespace VRMLoader
         }
 
         private LocaleText _localeText;
-        void Start () {
-            
-        }
 
-        public void SetLocale(string lang = "en")
+        public async void SetLocale(string lang = "en")
         {
             var path = Application.streamingAssetsPath + "/VRMLoaderUI/i18n/" + lang + ".json";
+#if UNITY_WEBGL
+            UnityWebRequest uwr = UnityWebRequest.Get(path);
+            await uwr.SendWebRequest();
+
+            if(uwr.isNetworkError || uwr.isHttpError)
+            {
+                throw new System.Exception("Cannot local file:" + path);
+            }
+            
+            var json = System.Text.Encoding.UTF8.GetString(uwr.downloadHandler.data, 3, uwr.downloadHandler.data.Length - 3);
+
+#else
             if (!File.Exists(path)) return;
             var json = File.ReadAllText(path);
+#endif
             _localeText = JsonUtility.FromJson<LocaleText>(json);
             
             UpdateText(_localeText);

@@ -2,7 +2,15 @@
 using UnityEngine.UI;
 using UniRx.Async;
 using VRMLoader;
+
+#if !UNITY_STANDALONE_WIN || !UNITY_EDITOR
+using VRM;
+using UnityEngine.Networking;
+#endif
+
+#if !UNITY_EDITOR
 using SFB;
+#endif
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -44,27 +52,31 @@ namespace Live_V
             if(path.Length != 0)
             {
                 await LoadVRM(path);
-                Debug.Log(path);
                 VRMpath = path;
             }
         }
 
         async UniTask LoadVRM(string path)
         {
-            Debug.Log(path);
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR
             var meta = await VRMMetaImporter.ImportVRMMeta(path, true);
-
+#else
+            UnityWebRequest uwr = UnityWebRequest.Get(path);
+            await uwr.SendWebRequest();
+            var context = new VRMImporterContext();
+            context.ParseGlb(uwr.downloadHandler.data);
+            var meta = context.ReadMeta(true);
+#endif
             GameObject modalObject = Instantiate(modalWindowPrefabs, canvas.transform) as GameObject;
-            Debug.Log("ここまで来た");
             var modalLocale = modalObject.GetComponentInChildren<VRMPreviewLocale>();
             modalLocale.SetLocale(language.captionText.text);
 
             var modalUi = modalObject.GetComponentInChildren<VRMPreviewUI>();
+
             modalUi.setMeta(meta);
 
             modalUi.setLoadable(true);
         }
-
         public static string GetVRMPath()
         {
             return VRMpath;
