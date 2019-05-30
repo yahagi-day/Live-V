@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UniRx.Async;
+using UnityEngine.Networking;
 using VRM;
+using System.Linq;
 
 namespace Live_V
 {
@@ -11,7 +13,6 @@ namespace Live_V
         public GameObject MusicPlayer;
         public GameObject MainCameraRig;
         public GameObject[] prefabsNeedsActivation;
-        //public GameObject VRMAvater;
         public GameObject[] miscPrefabs;
         public GameObject LipSync;
 
@@ -26,6 +27,7 @@ namespace Live_V
         GameObject[] objectsNeedsActivation;
         GameObject VRMAvaterController;
         GameObject LipsSyncContoller;
+        VRMImporterContext context;
 
         private async UniTask Awake()
         {
@@ -40,15 +42,14 @@ namespace Live_V
             for (var i = 0; i < prefabsNeedsActivation.Length; i++)
                 objectsNeedsActivation[i] = (GameObject)Instantiate(prefabsNeedsActivation[i]);
 
-            VRMAvaterController = await LoadVRMAvater();
-
+            VRMAvaterController = await LoadVRMAvater();            
             mainCameraSwitcher.GetComponentInChildren<CameraSwitcher>().vrm = VRMAvaterController;
             cameraRig.SetActive(true);
 
             LipsSyncContoller = (GameObject)Instantiate(LipSync);
             LipsSyncContoller.GetComponent<LipSyncController>().target = VRMAvaterController.GetComponent<VRMBlendShapeProxy>();
 
-            foreach (var p in miscPrefabs) Instantiate(p);
+            foreach (var p in miscPrefabs)Instantiate(p);
 
             GetComponent<Animator>().enabled = true;
             
@@ -56,20 +57,32 @@ namespace Live_V
 
         public async UniTask<GameObject> LoadVRMAvater()
         {
-            //var path = Application.streamingAssetsPath + "/Avater/model.vrm";
-            var path = VRMLoadUniRx.GetVRMPath();
-            Debug.Log(path);
-            var www = new WWW(path);
+            var path = Application.streamingAssetsPath + "/Avater/model.vrm";
+           //var path = VRMLoadUniRx.GetVRMPath();
+            byte[] VRMByteData;
+            GameObject go;
+            Debug.Log("読み込み開始");
 
-            await www;
+            using (var uwr = UnityWebRequest.Get(path))
+            {
+                await uwr.SendWebRequest();
+                VRMByteData = uwr.downloadHandler.data;
+            }
 
-            var go = await VRMImporter.LoadVrmAsync(www.bytes);
+            context = new VRMImporterContext();
+            context.ParseGlb(VRMByteData);
+            await context.LoadAsyncTask();
+            go =  context.Root;
+            context.ShowMeshes();        
+
+            
+
             go.AddComponent<Blinker>();
             go.AddComponent<FaceUpdate>();
             var animator = go.GetComponent<Animator>();
             animator.applyRootMotion = true;
             animator.runtimeAnimatorController = (RuntimeAnimatorController)Instantiate(Resources.Load("MocapC86"));
-            go.SetLayerRecursively(8);
+            go.SetLayerRecursively(8);            
 
             return go;
         }
@@ -137,6 +150,11 @@ namespace Live_V
             //Application.LoadLevel(0);
             //SceneManager.LoadScene(0);
             screenoverlays.enabled = true;
+            context.Dispose();
+            Destroy(LipsSyncContoller);
+            Destroy(mainCameraSwitcher);
+            foreach (var p in objectsNeedsActivation)
+                Destroy(p);
         }
 
     }

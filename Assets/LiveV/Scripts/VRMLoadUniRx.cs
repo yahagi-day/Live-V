@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UniRx.Async;
 using VRMLoader;
+using System;
 
 #if !UNITY_STANDALONE_WIN || !UNITY_EDITOR
 using VRM;
@@ -30,6 +31,7 @@ namespace Live_V
         Dropdown language;
 
         public static string VRMpath;
+        public static byte[] VRMdata;
 
         public async void DefaultVRM()
         {
@@ -58,14 +60,20 @@ namespace Live_V
 
         async UniTask LoadVRM(string path)
         {
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR
+#if UNITY_STANDALONE_WIN //|| UNITY_EDITOR
             var meta = await VRMMetaImporter.ImportVRMMeta(path, true);
 #else
-            UnityWebRequest uwr = UnityWebRequest.Get(path);
-            await uwr.SendWebRequest();
-            var context = new VRMImporterContext();
-            context.ParseGlb(uwr.downloadHandler.data);
-            var meta = context.ReadMeta(true);
+            VRMMetaObject meta;
+            using (UnityWebRequest uwr = UnityWebRequest.Get(path))
+            {
+                await uwr.SendWebRequest();
+                VRMdata = uwr.downloadHandler.data;
+            }
+            using (var context = new VRMImporterContext())
+            {
+                context.ParseGlb(VRMdata);
+                meta = context.ReadMeta(true);
+            }
 #endif
             GameObject modalObject = Instantiate(modalWindowPrefabs, canvas.transform) as GameObject;
             var modalLocale = modalObject.GetComponentInChildren<VRMPreviewLocale>();
@@ -77,9 +85,15 @@ namespace Live_V
 
             modalUi.setLoadable(true);
         }
+
+        public static byte[] GetVRMData()
+        {
+            return VRMdata;
+        }
         public static string GetVRMPath()
         {
             return VRMpath;
         }
     }
+
 }
