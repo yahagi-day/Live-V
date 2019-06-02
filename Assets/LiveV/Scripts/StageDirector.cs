@@ -3,7 +3,6 @@ using UnityEngine.SceneManagement;
 using UniRx.Async;
 using UnityEngine.Networking;
 using VRM;
-using System.Linq;
 
 namespace Live_V
 {
@@ -57,26 +56,25 @@ namespace Live_V
 
         public async UniTask<GameObject> LoadVRMAvater()
         {
-            var path = Application.streamingAssetsPath + "/Avater/model.vrm";
-           //var path = VRMLoadUniRx.GetVRMPath();
+            //var path = Application.streamingAssetsPath + "/Avater/model.vrm";
+            var path = VRMLoadUniRx.GetVRMPath();
             byte[] VRMByteData;
             GameObject go;
-            Debug.Log("読み込み開始");
-
+#if UNITY_WEBGL
+            VRMByteData = VRMLoadUniRx.GetVRMData();
+#else
             using (var uwr = UnityWebRequest.Get(path))
             {
                 await uwr.SendWebRequest();
                 VRMByteData = uwr.downloadHandler.data;
             }
-
+#endif
             context = new VRMImporterContext();
             context.ParseGlb(VRMByteData);
             await context.LoadAsyncTask();
             go =  context.Root;
-            context.ShowMeshes();        
-
-            
-
+            context.ShowMeshes();
+           
             go.AddComponent<Blinker>();
             go.AddComponent<FaceUpdate>();
             var animator = go.GetComponent<Animator>();

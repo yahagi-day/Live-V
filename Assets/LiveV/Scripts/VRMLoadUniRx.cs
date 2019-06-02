@@ -3,18 +3,13 @@ using UnityEngine.UI;
 using UniRx.Async;
 using VRMLoader;
 using System;
-
-#if !UNITY_STANDALONE_WIN || !UNITY_EDITOR
 using VRM;
 using UnityEngine.Networking;
-#endif
-
-#if !UNITY_EDITOR
-using SFB;
-#endif
 
 #if UNITY_EDITOR
 using UnityEditor;
+#else
+using SFB;
 #endif
 
 namespace Live_V
@@ -60,9 +55,7 @@ namespace Live_V
 
         async UniTask LoadVRM(string path)
         {
-#if UNITY_STANDALONE_WIN //|| UNITY_EDITOR
-            var meta = await VRMMetaImporter.ImportVRMMeta(path, true);
-#else
+#if UNITY_WEBGL
             VRMMetaObject meta;
             using (UnityWebRequest uwr = UnityWebRequest.Get(path))
             {
@@ -74,6 +67,9 @@ namespace Live_V
                 context.ParseGlb(VRMdata);
                 meta = context.ReadMeta(true);
             }
+#else
+            var meta = await VRMMetaImporter.ImportVRMMeta(path, true);
+
 #endif
             GameObject modalObject = Instantiate(modalWindowPrefabs, canvas.transform) as GameObject;
             var modalLocale = modalObject.GetComponentInChildren<VRMPreviewLocale>();
