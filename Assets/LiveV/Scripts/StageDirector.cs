@@ -27,8 +27,11 @@ namespace Live_V
         GameObject VRMAvaterController;
         GameObject LipsSyncContoller;
         VRMImporterContext context;
-
+#if UNITY_WEBGL
+        private void Awake()
+#else
         private async UniTask Awake()
+#endif
         {
             //PrefabをInstantiateするよ!!
             musicPlayer = (GameObject)Instantiate(MusicPlayer);
@@ -40,8 +43,11 @@ namespace Live_V
             objectsNeedsActivation = new GameObject[prefabsNeedsActivation.Length];
             for (var i = 0; i < prefabsNeedsActivation.Length; i++)
                 objectsNeedsActivation[i] = (GameObject)Instantiate(prefabsNeedsActivation[i]);
-
-            VRMAvaterController = await LoadVRMAvater();            
+#if UNITY_WEBGL
+            VRMAvaterController = LoadVRMAvater();
+#else
+            VRMAvaterController = await LoadVRMAvater();
+#endif
             mainCameraSwitcher.GetComponentInChildren<CameraSwitcher>().vrm = VRMAvaterController;
             cameraRig.SetActive(true);
 
@@ -53,8 +59,11 @@ namespace Live_V
             GetComponent<Animator>().enabled = true;
             
         }
-
+#if UNITY_WEBGL
+        public GameObject LoadVRMAvater()
+#else
         public async UniTask<GameObject> LoadVRMAvater()
+#endif
         {
             //var path = Application.streamingAssetsPath + "/Avater/model.vrm";
             var path = VRMLoadUniRx.GetVRMPath();
@@ -71,7 +80,11 @@ namespace Live_V
 #endif
             context = new VRMImporterContext();
             context.ParseGlb(VRMByteData);
+#if UNITY_WEBGL
+            context.Load();
+#else
             await context.LoadAsyncTask();
+#endif
             go =  context.Root;
             context.ShowMeshes();
            
