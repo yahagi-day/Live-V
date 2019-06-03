@@ -15,8 +15,5 @@ VRMファイルでライブを見よう！！
 - シヴィ (本来は再配布禁止ですが製作者の方に特別に許可をいただき、リポジトリ内に同梱しています) https://hub.vroid.com/characters/2921449382296017140/models/2134194530220818852
 
 <img src="UCL2.0/License Logo/Others/png/Light_Frame.png" alt="UCL2.0">
-この作品は 
 
-[ユニティちゃんライセンス条項](http://unity-chan.com/contents/license_jp/)
-
-の元に提供されています
+この作品は『[ユニティちゃんライセンス条項](http://unity-chan.com/download/license.html)』の元に提供されています
