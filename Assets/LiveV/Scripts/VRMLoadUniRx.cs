@@ -2,15 +2,10 @@
 using UnityEngine.UI;
 using UniRx.Async;
 using VRMLoader;
-using System;
+using System.Runtime.InteropServices;
 using VRM;
 using UnityEngine.Networking;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#else
 using SFB;
-#endif
 
 namespace Live_V
 {
@@ -31,28 +26,56 @@ namespace Live_V
         public async void DefaultVRM()
         {
             var path = Application.streamingAssetsPath + "/Avater/model.vrm";
+            Debug.Log(path);
             await LoadVRM(path);
             VRMpath = path;
         }
 
+        private async UniTask LoadJson(string url)
+        {
+            byte[] data;
+            VRMMetaObject meta;
+            using (var uwr = UnityWebRequest.Get(url))
+            {
+                await uwr.SendWebRequest();
+                data = uwr.downloadHandler.data;
+            }
+            using (var context = new VRMImporterContext())
+            {
+                context.ParseGlb(VRMdata);
+                meta = context.ReadMeta(true);
+            }
+
+            SetVRMmeta(meta);
+        }
+        [DllImport("__Internal")]
+        private static extern void FileImporterCaptureClick();
+
+#if UNITY_WEBGL
+        public void OpenVRM()
+        {
+            FileImporterCaptureClick();
+            Debug.Log("Call FileImporter");
+        }
+        public async void FileSelected(string url)
+        {
+            Debug.Log(url);
+            await LoadVRM(url);
+        }
+#else
         public async void OpenVRM()
         {
-#if UNITY_EDITOR
-            var path = EditorUtility.OpenFilePanel("Open VRM file", "", "vrm");
-#else
             var extensions = new[] { new ExtensionFilter("VRM Files", "vrm") };
             var paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", extensions, false);
-            var path = paths[0];
-            
-#endif
-
-            if(path.Length != 0)
+            var path = paths[0];            
+            if (path.Length != 0)
             {
                 await LoadVRM(path);
                 VRMpath = path;
             }
         }
-
+#endif
+        
         async UniTask LoadVRM(string path)
         {
 #if UNITY_WEBGL
@@ -71,6 +94,10 @@ namespace Live_V
             var meta = await VRMMetaImporter.ImportVRMMeta(path, true);
 
 #endif
+            SetVRMmeta(meta);
+        }
+        void SetVRMmeta(VRMMetaObject meta)
+        {
             GameObject modalObject = Instantiate(modalWindowPrefabs, canvas.transform) as GameObject;
             var modalLocale = modalObject.GetComponentInChildren<VRMPreviewLocale>();
             modalLocale.SetLocale(language.captionText.text);
@@ -90,6 +117,7 @@ namespace Live_V
         {
             return VRMpath;
         }
+
     }
 
 }
