@@ -46,8 +46,6 @@ namespace MToon
         private MaterialProperty _rimLightingMix;
         private MaterialProperty _rimFresnelPower;
         private MaterialProperty _rimLift;
-        private MaterialProperty _uvOffsetNormalTexture;
-        private MaterialProperty _uvOffsetNormalScale;
         private MaterialProperty _uvAnimMaskTexture;
         private MaterialProperty _uvAnimScrollX;
         private MaterialProperty _uvAnimScrollY;
@@ -90,8 +88,6 @@ namespace MToon
             _outlineScaledMaxDistance = FindProperty(Utils.PropOutlineScaledMaxDistance, properties);
             _outlineColor = FindProperty(Utils.PropOutlineColor, properties);
             _outlineLightingMix = FindProperty(Utils.PropOutlineLightingMix, properties);
-            _uvOffsetNormalTexture = FindProperty(Utils.PropUvOffsetNormalTexture, properties);
-            _uvOffsetNormalScale = FindProperty(Utils.PropUvOffsetNormalScale, properties);
             _uvAnimMaskTexture = FindProperty(Utils.PropUvAnimMaskTexture, properties);
             _uvAnimScrollX = FindProperty(Utils.PropUvAnimScrollX, properties);
             _uvAnimScrollY = FindProperty(Utils.PropUvAnimScrollY, properties);
@@ -201,7 +197,7 @@ namespace MToon
                                     "Zero is Default. Negative value increase lit area. Positive value increase shade area."));
                             materialEditor.TexturePropertySingleLine(
                                 new GUIContent("Shadow Receive Multiplier",
-                                    "Texture (A) * Rate. White is Default. Black attenuates shadows."),
+                                    "Texture (R) * Rate. White is Default. Black attenuates shadows."),
                                 _receiveShadowTexture,
                                 _receiveShadowRate);
                             materialEditor.TexturePropertySingleLine(
@@ -316,17 +312,9 @@ namespace MToon
                     }
                     EditorGUILayout.Space();
 
-                    EditorGUILayout.LabelField("Offset Texture", EditorStyles.boldLabel);
-                    {
-                        materialEditor.TexturePropertySingleLine(new GUIContent("Offset [Normal]"),
-                            _uvOffsetNormalTexture,
-                            _uvOffsetNormalScale);
-                    }
-                    EditorGUILayout.Space();
-                    
                     EditorGUILayout.LabelField("Auto Animation", EditorStyles.boldLabel);
                     {
-                        materialEditor.TexturePropertySingleLine(new GUIContent("Mask"), _uvAnimMaskTexture);
+                        materialEditor.TexturePropertySingleLine(new GUIContent("Mask", "Auto Animation Mask Texture (R)"), _uvAnimMaskTexture);
                         materialEditor.ShaderProperty(_uvAnimScrollX, "Scroll X (per second)");
                         materialEditor.ShaderProperty(_uvAnimScrollY, "Scroll Y (per second)");
                         materialEditor.ShaderProperty(_uvAnimRotation, "Rotation (per second)");
