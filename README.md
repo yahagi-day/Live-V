@@ -1,3 +1,6 @@
+# WebGL版
+www.magical-project.com
+
 # Live-V
 VRMファイルでライブを見よう！！
 
