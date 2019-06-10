@@ -20,7 +20,7 @@ half _ShadeToony;
 half _LightColorAttenuation;
 half _IndirectLightIntensity;
 sampler2D _RimTexture;
-fixed4 _RimColor;
+half4 _RimColor;
 half _RimLightingMix;
 half _RimFresnelPower;
 half _RimLift;
@@ -32,8 +32,6 @@ half _OutlineWidth;
 half _OutlineScaledMaxDistance;
 fixed4 _OutlineColor;
 half _OutlineLightingMix;
-sampler2D _UvOffsetNormalTexture;
-float _UvOffsetNormalScale;
 sampler2D _UvAnimMaskTexture;
 float _UvAnimScrollX;
 float _UvAnimScrollY;
@@ -124,9 +122,6 @@ float4 frag_forward(v2f i) : SV_TARGET
     // uv
     float2 mainUv = TRANSFORM_TEX(i.uv0, _MainTex);
     
-    // offset uv with normal.xy*scale*0.01
-    mainUv += UnpackScaleNormal(tex2D(_UvOffsetNormalTexture, mainUv), _UvOffsetNormalScale * 0.01).xy;
-    
     // uv anim
     half uvAnim = tex2D(_UvAnimMaskTexture, mainUv).r * _Time.y;
     // translate uv in bottom-left origin coordinates.
@@ -214,6 +209,8 @@ float4 frag_forward(v2f i) : SV_TARGET
     half3 indirectLighting = lerp(toonedGI, ShadeSH9(half4(worldNormal, 1)), _IndirectLightIntensity);
     indirectLighting = lerp(indirectLighting, max(EPS_COL, max(indirectLighting.x, max(indirectLighting.y, indirectLighting.z))), _LightColorAttenuation); // color atten
     col += indirectLighting * lit;
+    
+    col = min(col, lit); // comment out if you want to PBR absolutely.
 #endif
 
     // parametric rim lighting
