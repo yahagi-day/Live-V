@@ -27,6 +27,9 @@ namespace Live_V
         GameObject VRMAvaterController;
         GameObject LipsSyncContoller;
         VRMImporterContext context;
+
+        Vector3 DefaulteyePos = new Vector3(0, 0.7f, 0); //シヴィちゃん基準
+
 #if UNITY_WEBGL
         private void Awake()
 #else
@@ -49,6 +52,21 @@ namespace Live_V
             VRMAvaterController = await LoadVRMAvater();
 #endif
             mainCameraSwitcher.GetComponentInChildren<CameraSwitcher>().vrm = VRMAvaterController;
+            var VRMAnimator = VRMAvaterController.GetComponent<Animator>();
+            var eye = transform.TransformPoint(VRMAnimator.GetBoneTransform(HumanBodyBones.LeftEye).transform.position);
+            var eyediff = eye - DefaulteyePos;
+            Debug.Log(eye);
+            var campos = cameraRig.GetComponentInChildren<FindObject>().FindGameObject();
+            foreach(Transform child in transform)
+            {
+                child.position += eyediff;
+            }
+            foreach (Transform child in campos.transform)
+            {
+                Debug.Log(child.position.y);
+                child.position += eyediff;
+                Debug.Log(child.position.y);
+            }
             cameraRig.SetActive(true);
 
             LipsSyncContoller = (GameObject)Instantiate(LipSync);
