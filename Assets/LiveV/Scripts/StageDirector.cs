@@ -57,16 +57,8 @@ namespace Live_V
             var eyediff = eye - DefaulteyePos;
             Debug.Log(eye);
             var campos = cameraRig.GetComponentInChildren<FindObject>().FindGameObject();
-            foreach(Transform child in transform)
-            {
-                child.position += eyediff;
-            }
-            foreach (Transform child in campos.transform)
-            {
-                Debug.Log(child.position.y);
-                child.position += eyediff;
-                Debug.Log(child.position.y);
-            }
+            foreach(Transform child in transform)child.position += eyediff;
+            foreach (Transform child in campos.transform)child.position += eyediff;
             cameraRig.SetActive(true);
 
             LipsSyncContoller = (GameObject)Instantiate(LipSync);

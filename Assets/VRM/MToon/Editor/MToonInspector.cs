@@ -8,8 +8,12 @@ namespace MToon
 {
     public class MToonInspector : ShaderGUI
     {
-        private static bool isAdvancedLightingPanelFoldout = false;
+        private const float RoundsToDegree = 360f;
+        private const float RoundsToRadian = (float) Math.PI * 2f;
 
+        private static bool isAdvancedLightingPanelFoldout = false;
+        private static EditorRotationUnit editorRotationUnit = EditorRotationUnit.Rounds;
+        
         private MaterialProperty _version;
         private MaterialProperty _blendMode;
         private MaterialProperty _bumpMap;
@@ -92,7 +96,6 @@ namespace MToon
             _uvAnimScrollX = FindProperty(Utils.PropUvAnimScrollX, properties);
             _uvAnimScrollY = FindProperty(Utils.PropUvAnimScrollY, properties);
             _uvAnimRotation = FindProperty(Utils.PropUvAnimRotation, properties);
-
             var materials = materialEditor.targets.Select(x => x as Material).ToArray();
             Draw(materialEditor, materials);
         }
@@ -317,7 +320,28 @@ namespace MToon
                         materialEditor.TexturePropertySingleLine(new GUIContent("Mask", "Auto Animation Mask Texture (R)"), _uvAnimMaskTexture);
                         materialEditor.ShaderProperty(_uvAnimScrollX, "Scroll X (per second)");
                         materialEditor.ShaderProperty(_uvAnimScrollY, "Scroll Y (per second)");
-                        materialEditor.ShaderProperty(_uvAnimRotation, "Rotation (per second)");
+
+                        {
+                            var control = EditorGUILayout.GetControlRect(hasLabel: true);
+                            const int popupMargin = 5;
+                            const int popupWidth = 80;
+
+                            var floatControl = new Rect(control);
+                            floatControl.width -= popupMargin + popupWidth;
+                            var popupControl = new Rect(control);
+                            popupControl.x = floatControl.x + floatControl.width + popupMargin;
+                            popupControl.width = popupWidth;
+                            
+                            EditorGUI.BeginChangeCheck();
+                            var inspectorRotationValue = GetInspectorRotationValue(editorRotationUnit, _uvAnimRotation.floatValue);
+                            inspectorRotationValue = EditorGUI.FloatField(floatControl, "Rotation value (per second)", inspectorRotationValue);
+                            if (EditorGUI.EndChangeCheck())
+                            {
+                                materialEditor.RegisterPropertyChangeUndo("UvAnimRotationValueChanged");
+                                _uvAnimRotation.floatValue = GetRawRotationValue(editorRotationUnit, inspectorRotationValue);
+                            }
+                            editorRotationUnit = (EditorRotationUnit) EditorGUI.EnumPopup(popupControl, editorRotationUnit);
+                        }
                     }
                 }
                 EditorGUILayout.EndVertical();
@@ -400,6 +424,36 @@ namespace MToon
 #endif
                 showAlpha: false);
             
+        }
+
+        private static float GetRawRotationValue(EditorRotationUnit unit, float inspectorValue)
+        {
+            switch (unit)
+            {
+                case EditorRotationUnit.Rounds:
+                    return inspectorValue;
+                case EditorRotationUnit.Degrees:
+                    return inspectorValue / RoundsToDegree;
+                case EditorRotationUnit.Radians:
+                    return inspectorValue / RoundsToRadian;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private static float GetInspectorRotationValue(EditorRotationUnit unit, float rawValue)
+        {
+            switch (unit)
+            {
+                case EditorRotationUnit.Rounds:
+                    return rawValue;
+                case EditorRotationUnit.Degrees:
+                    return rawValue * RoundsToDegree;
+                case EditorRotationUnit.Radians:
+                    return rawValue * RoundsToRadian;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
