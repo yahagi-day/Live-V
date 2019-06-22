@@ -75,8 +75,8 @@ namespace Live_V
         public async UniTask<GameObject> LoadVRMAvater()
 #endif
         {
-            //var path = Application.streamingAssetsPath + "/Avater/model.vrm";
             var path = VRMLoadUniRx.GetVRMPath();
+            if (path == null){path = Application.streamingAssetsPath + "/Avater/model.vrm";}
             byte[] VRMByteData;
             GameObject go;
 #if UNITY_WEBGL
