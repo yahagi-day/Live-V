@@ -51,6 +51,10 @@ namespace Live_V
 #else
             VRMAvaterController = await LoadVRMAvater();
 #endif
+            if(SceneManager.GetActiveScene().name == "DeepDusk")
+            {
+                VRMAvaterController.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
+            }
             mainCameraSwitcher.GetComponentInChildren<CameraSwitcher>().vrm = VRMAvaterController;
             var VRMAnimator = VRMAvaterController.GetComponent<Animator>();
             var eye = transform.TransformPoint(VRMAnimator.GetBoneTransform(HumanBodyBones.LeftEye).transform.position);

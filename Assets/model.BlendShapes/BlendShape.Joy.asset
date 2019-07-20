@@ -9,7 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e6292b2c06870d4495f009f912b9600, type: 3}
-  m_Name: DeeoDusk
+  m_Script: {fileID: 11500000, guid: 37562b39ff933b245ac2f35d87edbcd6, type: 3}
+  m_Name: BlendShape.Joy
   m_EditorClassIdentifier: 
-  settings: []
+  m_prefab: {fileID: 0}
+  BlendShapeName: Joy
+  Preset: 8
+  Values:
+  - RelativePath: Face
+    Index: 2
+    Weight: 100
+  MaterialValues: []
+  IsBinary: 0
