@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/LiveV/Scenes/LoadVRM.unity
     guid: 0ac3fcc6697819a49998d7a44ddbab0d
   - enabled: 1
-    path: Assets/LiveV/Scenes/Main.unity
+    path: Assets/LiveV/Scenes/Underground.unity
     guid: f3609c03320fb7449a6cf3a5f115ef01
   - enabled: 0
     path: Assets/LiveV/Scenes/Test.unity
