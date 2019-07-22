@@ -137,7 +137,7 @@ namespace VRMLoader
 
         public void NextScene()
         {
-            SceneManager.LoadSceneAsync("Underground");
+            SceneManager.LoadSceneAsync("DeepDusk");
         }
 
         public void destroyMe()
