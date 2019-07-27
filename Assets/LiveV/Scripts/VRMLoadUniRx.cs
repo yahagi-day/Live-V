@@ -1,19 +1,16 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using UniRx.Async;
-using VRMLoader;
+﻿using SFB;
 using System.Runtime.InteropServices;
-using VRM;
+using UniRx.Async;
+using UnityEngine;
 using UnityEngine.Networking;
-using SFB;
+using UnityEngine.UI;
+using VRM;
+using VRMLoader;
 
 namespace Live_V
 {
     public class VRMLoadUniRx : MonoBehaviour
     {
-        [SerializeField, Header("GUI")]
-        Canvas canvas;
-
         [SerializeField]
         GameObject modalWindowPrefabs;
 
@@ -98,7 +95,8 @@ namespace Live_V
         }
         void SetVRMmeta(VRMMetaObject meta)
         {
-            GameObject modalObject = Instantiate(modalWindowPrefabs, canvas.transform) as GameObject;
+            GameObject modalObject = modalWindowPrefabs;
+            modalObject.SetActive(true);
             var modalLocale = modalObject.GetComponentInChildren<VRMPreviewLocale>();
             modalLocale.SetLocale(language.captionText.text);
 

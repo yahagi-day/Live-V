@@ -1601,7 +1601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &224739674045519424
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1704,6 +1704,7 @@ MonoBehaviour:
     - {fileID: 2800000, guid: 54ba0b9f777fb2840b5127a63308b58d, type: 3}
   m_ok: {fileID: 114852743041473586}
   m_cancel: {fileID: 114943970561385666}
+  SelectStage: {fileID: 0}
 --- !u!114 &114702070627180428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2667,7 +2668,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114697535363172002}
-        m_MethodName: NextScene
+        m_MethodName: StageSelect
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

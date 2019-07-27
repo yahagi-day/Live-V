@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using UnityEngine.SceneManagement;
-using UniRx.Async;
+﻿using UniRx.Async;
+using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using VRM;
 
 namespace Live_V
@@ -17,6 +17,7 @@ namespace Live_V
 
         //Cameraの場所
         public Transform[] cameraPoints;
+        public GameObject Canvas;
 
         ScreenOverlay screenoverlays;
 
@@ -28,6 +29,15 @@ namespace Live_V
         GameObject LipsSyncContoller;
         VRMImporterContext context;
         Vector3 DefaulteyePos;
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                bool active = !Canvas.activeSelf;
+                Canvas.SetActive(active);
+            }
+        }
 
 #if UNITY_WEBGL
         private void Awake()
@@ -179,14 +189,17 @@ namespace Live_V
 
         public void EndPerformance()
         {
-            //Application.LoadLevel(0);
-            //SceneManager.LoadScene(0);
+            /*
+            Application.LoadLevel(0);
+            SceneManager.LoadScene(0);
             screenoverlays.enabled = true;
             context.Dispose();
             Destroy(LipsSyncContoller);
             Destroy(mainCameraSwitcher);
             foreach (var p in objectsNeedsActivation)
                 Destroy(p);
+            */
+            Canvas.SetActive(true);
         }
 
     }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 using VRM;
 
 namespace VRMLoader
@@ -118,6 +117,7 @@ namespace VRMLoader
         };
         
         public Button m_ok, m_cancel;
+        public GameObject SelectStage;
 
         public void SetSelectionText(VRMPreviewLocale.Selections selections)
         {
@@ -135,14 +135,14 @@ namespace VRMLoader
             m_ok.interactable = loadable;
         }
 
-        public void NextScene()
+        public void StageSelect()
         {
-            SceneManager.LoadSceneAsync("DeepDusk");
+            SelectStage.SetActive(true);
         }
 
         public void destroyMe()
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }
