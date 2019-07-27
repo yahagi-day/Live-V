@@ -1,13 +1,16 @@
+# Live-V
+VRMファイルでライブを見よう！！
+
+# Windows版
+<img src="Assets/LiveV/Textures/Underground.png" width="600">
+
+https://github.com/yahagi-day/Live-V/releases
 # WebGL版
 
 <img src="Assets/LiveV/Textures/DeepDusk.png" width="600">
 WebGL版は一部の演出が簡略化されています。リッチな演出を楽しみたい方はWindows版をお使い下さい。
 
 www.magical-project.com
-
-
-# Live-V
-VRMファイルでライブを見よう！！
 
 # 使い方
 読み込みたいアバターを選択するかDefault Avaterを選択するとLiveが始まります。止まりません。
