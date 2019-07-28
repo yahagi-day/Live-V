@@ -4,7 +4,7 @@ VRMファイルでライブを見よう！！
 # Windows版
 <img src="Assets/LiveV/Textures/Underground.png" width="600">
 
-https://github.com/yahagi-day/Live-V/releases
+https://yahagi-day.booth.pm/items/1479177
 # WebGL版
 
 <img src="Assets/LiveV/Textures/DeepDusk.png" width="600">
