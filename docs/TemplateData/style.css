@@ -1,4 +1,3 @@
-.w
 .webgl-content * {
     border: 0;
     margin: 0;
@@ -100,3 +99,8 @@
             .webgl-content .footer .SorceURL a {
                 text-decoration: none;
             }
+
+.gist-content {
+    position: absolute;
+    margin-top: 20px;
+}
