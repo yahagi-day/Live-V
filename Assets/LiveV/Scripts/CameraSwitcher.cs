@@ -12,6 +12,7 @@ public class CameraSwitcher : MonoBehaviour
     public AnimationCurve fovCurve = AnimationCurve.Linear(1, 30, 10, 30);
     public bool autoChange = true;
     public Transform StartCameraPos;
+    public bool AutoDis = true;
 
     Transform target;
     Vector3 followPoint;
@@ -39,8 +40,29 @@ public class CameraSwitcher : MonoBehaviour
         var param = Mathf.Exp(-rotationSpeed * Time.deltaTime);
         followPoint = Vector3.Lerp(target.position, followPoint, param);
 
+        //カメラとVRMの接触回避
+        if (AutoDis)
+        {
+            CameraDistanceControl();
+        }
+
         // Look at the follow point.
         transform.LookAt(followPoint);
+    }
+
+    private void CameraDistanceControl()
+    {
+        var mindis = 0.35f;
+        var vrmpos = vrm.GetComponent<Animator>().GetBoneTransform(HumanBodyBones.Head).position;
+        var campos = this.gameObject.transform.position;
+        var dis = Vector3.Distance(campos, vrmpos);
+        if (mindis >= dis)
+        {
+            var direction = this.gameObject.transform.rotation * Vector3.forward;
+            transform.position += direction * -0.1f * Time.deltaTime;
+
+        }
+        Debug.Log(dis);
     }
 
     // Change the camera position.

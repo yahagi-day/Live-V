@@ -90,6 +90,7 @@ namespace Live_V
             GetComponent<Animator>().enabled = true;
             
         }
+
 #if UNITY_WEBGL
         public GameObject LoadVRMAvater()
 #else
