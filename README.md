@@ -7,7 +7,7 @@ VRMファイルでライブを見よう！！
 https://yahagi-day.booth.pm/items/1479177
 # WebGL版
 
-<img src="Assets/LiveV/Textures/DeepDusk.png" width="600">
+<img src="Assets/LiveV/Textures/UnityChanCRS.png" width="600">
 WebGL版は一部の演出が簡略化されています。リッチな演出を楽しみたい方はWindows版をお使い下さい。
 
 www.magical-project.com
