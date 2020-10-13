@@ -6,7 +6,7 @@ using UniGLTF;
 
 namespace VRM
 {
-    public static class VRMHumanoidNorimalizerMenu
+    public static class VRMHumanoidNormalizerMenu
     {
         const string MENU_KEY = VRMVersion.MENU + "/Freeze T-Pose";
         [MenuItem(MENU_KEY, true, 1)]
@@ -48,14 +48,8 @@ namespace VRM
         {
             var go = Selection.activeObject as GameObject;
 
-            GameObject normalizedRoot = null;
-            using (new VRMExportSettings.RecordDisposer(go.transform.Traverse().ToArray(), "before normalize"))
-            {
-                var normalized = BoneNormalizer.Execute(go, true, false);
-                VRMExportSettings.CopyVRMComponents(go, normalized.Root, normalized.BoneMap);
-                normalizedRoot = normalized.Root;
-            }
-            Selection.activeGameObject = normalizedRoot;
+            // BoneNormalizer.Execute はコピーを正規化する。UNDO無用
+            Selection.activeGameObject = VRMBoneNormalizer.Execute(go, true, false);
         }
     }
 }

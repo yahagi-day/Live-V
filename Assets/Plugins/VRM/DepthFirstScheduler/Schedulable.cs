@@ -12,7 +12,7 @@ namespace DepthFirstScheduler
         /// <returns>実行が終了したか？Coroutineの実行が一回で終わらない場合がある</returns>
         ExecutionStatus Execute();
         Exception GetError();
-        IScheduler Schedulder { get; }
+        IScheduler Scheduler { get; }
 
         ISchedulable Parent { get; set; }
         void AddChild(ISchedulable child);
@@ -66,7 +66,7 @@ namespace DepthFirstScheduler
             set;
         }
 
-        public IScheduler Schedulder
+        public IScheduler Scheduler
         {
             get;
             private set;
@@ -89,7 +89,7 @@ namespace DepthFirstScheduler
 
         public Schedulable(IScheduler scheduler, IFunctor<T> func)
         {
-            Schedulder = scheduler;
+            Scheduler = scheduler;
             Func = func;
         }
 
@@ -137,10 +137,10 @@ namespace DepthFirstScheduler
             return schedulable;
         }
 
-        public Schedulable<T> AddCoroutine(IScheduler scheduler, Func<IEnumerator> starter)
+        public Schedulable<Unit> AddCoroutine(IScheduler scheduler, Func<IEnumerator> starter)
         {
-            var func = CoroutineFunctor.Create(() => default(T), _ => starter());
-            var schedulable = new Schedulable<T>(scheduler, func);
+            var func = CoroutineFunctor.Create<Unit, Unit>(() => default(Unit), _ => starter());
+            var schedulable = new Schedulable<Unit>(scheduler, func);
             AddChild(schedulable);
             return schedulable;
         }
@@ -168,15 +168,26 @@ namespace DepthFirstScheduler
             return schedulable;
         }
 
-        public Schedulable<T> ContinueWithCoroutine(IScheduler scheduler, Func<IEnumerator> starter)
+        public Schedulable<Unit> ContinueWithCoroutine(IScheduler scheduler, Func<IEnumerator> starter)
+        {
+            return ContinueWithCoroutine<Unit>(scheduler, _ => starter());
+        }
+
+        public Schedulable<U> ContinueWithCoroutine<U>(IScheduler scheduler, Func<T, IEnumerator> starter)
         {
             if (Parent == null)
             {
                 throw new NoParentException();
             }
 
-            var func = CoroutineFunctor.Create(() => default(T), _ => starter());
-            var schedulable = new Schedulable<T>(scheduler, func);
+            Func<T> getResult = null;
+            if (Func != null)
+            {
+                getResult = Func.GetResult;
+            }
+
+            var func = CoroutineFunctor.Create<T, U>(getResult, starter);
+            var schedulable = new Schedulable<U>(scheduler, func);
             Parent.AddChild(schedulable);
             return schedulable;
         }

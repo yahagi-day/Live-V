@@ -7,149 +7,132 @@ namespace VRM
 {
     /// <summary>
     /// The base algorithm is http://rocketjump.skr.jp/unity3d/109/ of @ricopin416
-    /// DefaultExecutionOrder(11000) means calclate springbone after FinaiIK( VRIK )
+    /// DefaultExecutionOrder(11000) means calculate springbone after FinalIK( VRIK )
     /// </summary>
-    #if UNITY_5_5_OR_NEWER
     [DefaultExecutionOrder(11000)]
-    #endif
-    public class VRMSpringBone : MonoBehaviour
+    // [RequireComponent(typeof(VCIObject))]
+    public sealed class VRMSpringBone : MonoBehaviour
     {
         [SerializeField]
         public string m_comment;
 
-        [SerializeField, Header("Gizmo")]
-        bool m_drawGizmo;
+        [SerializeField] [Header("Gizmo")] private bool m_drawGizmo = default;
+
+        [SerializeField] private Color m_gizmoColor = Color.yellow;
 
         [SerializeField]
-        Color m_gizmoColor = Color.yellow;
-
-        [SerializeField, Range(0, 4), Header("Settings")]
+        [Range(0, 4)]
+        [Header("Settings")]
         public float m_stiffnessForce = 1.0f;
 
-        [SerializeField, Range(0, 2)]
-        public float m_gravityPower = 0;
+        [SerializeField] [Range(0, 2)] public float m_gravityPower;
 
-        [SerializeField]
-        public Vector3 m_gravityDir = new Vector3(0, -1.0f, 0);
+        [SerializeField] public Vector3 m_gravityDir = new Vector3(0, -1.0f, 0);
 
-        [SerializeField, Range(0, 1)]
-        public float m_dragForce = 0.4f;
+        [SerializeField] [Range(0, 1)] public float m_dragForce = 0.4f;
 
-        [SerializeField]
-        public Transform m_center;
+        [SerializeField] public Transform m_center;
 
-        [SerializeField]
-        public List<Transform> RootBones = new List<Transform>();
+        [SerializeField] public List<Transform> RootBones = new List<Transform>();
         Dictionary<Transform, Quaternion> m_initialLocalRotationMap;
 
-        [SerializeField, Range(0, 0.5f), Header("Collider")]
+        [SerializeField]
+        [Range(0, 0.5f)]
+        [Header("Collider")]
         public float m_hitRadius = 0.02f;
 
         [SerializeField]
         public VRMSpringBoneColliderGroup[] ColliderGroups;
 
+        public enum SpringBoneUpdateType
+        {
+            LateUpdate,
+            FixedUpdate,
+        }
+        [SerializeField]
+        public SpringBoneUpdateType m_updateType = SpringBoneUpdateType.LateUpdate;
+
         /// <summary>
-        /// 
         /// original from
-        /// 
         /// http://rocketjump.skr.jp/unity3d/109/
-        /// 
         /// </summary>
-        public class VRMSpringBoneLogic
+        private class VRMSpringBoneLogic
         {
             Transform m_transform;
-            public Transform Head
-            {
-                get { return m_transform; }
-            }
+            public Transform Head => m_transform;
 
-            public Vector3 Tail
-            {
-                get { return m_transform.localToWorldMatrix.MultiplyPoint(m_boneAxis * m_length); }
-            }
+            private Vector3 m_boneAxis;
+            private Vector3 m_currentTail;
 
-            float m_length;
-            Vector3 m_currentTail;
-            Vector3 m_prevTail;
-            Vector3 m_localDir;
-            Quaternion m_localRotation;
-            public Quaternion LocalRotation
-            {
-                get { return m_localRotation; }
-            }
-            public Vector3 m_boneAxis;
-
-            public float Radius { get; set; }
+            private readonly float m_length;
+            private Vector3 m_localDir;
+            private Vector3 m_prevTail;
 
             public VRMSpringBoneLogic(Transform center, Transform transform, Vector3 localChildPosition)
             {
                 m_transform = transform;
                 var worldChildPosition = m_transform.TransformPoint(localChildPosition);
-                m_currentTail = center!= null
-                    ? center.InverseTransformPoint(worldChildPosition)
-                    : worldChildPosition
-                    ;
+                m_currentTail = center != null
+                        ? center.InverseTransformPoint(worldChildPosition)
+                        : worldChildPosition;
                 m_prevTail = m_currentTail;
-                m_localRotation = transform.localRotation;
+                LocalRotation = transform.localRotation;
                 m_boneAxis = localChildPosition.normalized;
                 m_length = localChildPosition.magnitude;
             }
 
-            Quaternion ParentRotation
-            {
-                get
-                {
-                    return m_transform.parent != null
-                        ? m_transform.parent.rotation
-                        : Quaternion.identity
-                        ;
-                }
-            }
+            public Vector3 Tail => m_transform.localToWorldMatrix.MultiplyPoint(m_boneAxis * m_length);
+
+            private Quaternion LocalRotation { get; }
+
+            public float Radius { get; set; }
+
+            private Quaternion ParentRotation =>
+                m_transform.parent != null
+                    ? m_transform.parent.rotation
+                    : Quaternion.identity;
 
             public void Update(Transform center,
                 float stiffnessForce, float dragForce, Vector3 external,
                 List<SphereCollider> colliders)
             {
-                var currentTail = center!=null
-                    ? center.TransformPoint(m_currentTail)
-                    : m_currentTail
-                    ;
-                var prevTail = center!=null
-                    ? center.TransformPoint(m_prevTail)
-                    : m_prevTail
-                    ;
+                var currentTail = center != null
+                        ? center.TransformPoint(m_currentTail)
+                        : m_currentTail;
+                var prevTail = center != null
+                        ? center.TransformPoint(m_prevTail)
+                        : m_prevTail;
 
                 // verlet積分で次の位置を計算
                 var nextTail = currentTail
-                    + (currentTail - prevTail) * (1.0f - dragForce) // 前フレームの移動を継続する(減衰もあるよ)
-                    + ParentRotation * m_localRotation * m_boneAxis * stiffnessForce // 親の回転による子ボーンの移動目標
-                    + external // 外力による移動量
-                    ;
+                               + (currentTail - prevTail) * (1.0f - dragForce) // 前フレームの移動を継続する(減衰もあるよ)
+                               + ParentRotation * LocalRotation * m_boneAxis * stiffnessForce // 親の回転による子ボーンの移動目標
+                               + external; // 外力による移動量
 
                 // 長さをboneLengthに強制
-                nextTail = m_transform.position + (nextTail - m_transform.position).normalized * m_length;
+                var position = m_transform.position;
+                nextTail = position + (nextTail - position).normalized * m_length;
 
                 // Collisionで移動
                 nextTail = Collision(colliders, nextTail);
 
-                m_prevTail = center!=null
-                    ? center.InverseTransformPoint(currentTail)
-                    : currentTail
-                    ;
-                m_currentTail = center!=null
-                    ? center.InverseTransformPoint(nextTail)
-                    : nextTail
-                    ;
+                m_prevTail = center != null
+                        ? center.InverseTransformPoint(currentTail)
+                        : currentTail;
+
+                m_currentTail = center != null
+                        ? center.InverseTransformPoint(nextTail)
+                        : nextTail;
 
                 //回転を適用
-                Head.rotation = ApplyRotation(nextTail);
+                m_transform.rotation = ApplyRotation(nextTail);
             }
 
             protected virtual Quaternion ApplyRotation(Vector3 nextTail)
             {
-                var rotation = ParentRotation * m_localRotation;
-                return Quaternion.FromToRotation(rotation * m_boneAxis, 
-                    nextTail - m_transform.position) * rotation;
+                var rotation = ParentRotation * LocalRotation;
+                return Quaternion.FromToRotation(rotation * m_boneAxis,
+                           nextTail - m_transform.position) * rotation;
             }
 
             protected virtual Vector3 Collision(List<SphereCollider> colliders, Vector3 nextTail)
@@ -171,14 +154,12 @@ namespace VRM
 
             public void DrawGizmo(Transform center, float radius, Color color)
             {
-                var currentTail = center!=null
-                    ? center.TransformPoint(m_currentTail)
-                    : m_currentTail
-                    ;
+                var currentTail = center != null
+                        ? center.TransformPoint(m_currentTail)
+                        : m_currentTail;
                 var prevTail = center != null
-                    ? center.TransformPoint(m_prevTail)
-                    : m_prevTail
-                    ;
+                        ? center.TransformPoint(m_prevTail)
+                        : m_prevTail;
 
                 Gizmos.color = Color.gray;
                 Gizmos.DrawLine(currentTail, prevTail);
@@ -197,7 +178,7 @@ namespace VRM
         }
 
         [ContextMenu("Reset bones")]
-        public void Setup(bool force=false)
+        public void Setup(bool force = false)
         {
             if (RootBones != null)
             {
@@ -207,10 +188,7 @@ namespace VRM
                 }
                 else
                 {
-                    foreach(var kv in m_initialLocalRotationMap)
-                    {
-                        kv.Key.localRotation = kv.Value;
-                    }
+                    foreach (var kv in m_initialLocalRotationMap) kv.Key.localRotation = kv.Value;
                     m_initialLocalRotationMap.Clear();
                 }
                 m_verlet.Clear();
@@ -219,10 +197,7 @@ namespace VRM
                 {
                     if (go != null)
                     {
-                        foreach(var x in go.transform.Traverse())
-                        {
-                            m_initialLocalRotationMap[x] = x.localRotation;
-                        }
+                        foreach (var x in go.transform.GetComponentsInChildren<Transform>(true)) m_initialLocalRotationMap[x] = x.localRotation;
 
                         SetupRecursive(m_center, go);
                     }
@@ -230,21 +205,24 @@ namespace VRM
             }
         }
 
-        static IEnumerable<Transform> GetChildren(Transform parent)
+        public void SetLocalRotationsIdentity()
         {
-            for(int i=0; i<parent.childCount; ++i)
-            {
-                yield return parent.GetChild(i);
-            }
+            foreach (var verlet in m_verlet) verlet.Head.localRotation = Quaternion.identity;
         }
 
-        void SetupRecursive(Transform center, Transform parent)
+        private static IEnumerable<Transform> GetChildren(Transform parent)
+        {
+            for (var i = 0; i < parent.childCount; ++i) yield return parent.GetChild(i);
+        }
+
+        private void SetupRecursive(Transform center, Transform parent)
         {
             if (parent.childCount == 0)
             {
                 var delta = parent.position - parent.parent.position;
                 var childPosition = parent.position + delta.normalized * 0.07f;
-                m_verlet.Add(new VRMSpringBoneLogic(center, parent, parent.worldToLocalMatrix.MultiplyPoint(childPosition)));
+                m_verlet.Add(new VRMSpringBoneLogic(center, parent,
+                    parent.worldToLocalMatrix.MultiplyPoint(childPosition)));
             }
             else
             {
@@ -252,40 +230,59 @@ namespace VRM
                 var localPosition = firstChild.localPosition;
                 var scale = firstChild.lossyScale;
                 m_verlet.Add(new VRMSpringBoneLogic(center, parent,
-                    new Vector3(
-                        localPosition.x * scale.x,
-                        localPosition.y * scale.y,
-                        localPosition.z * scale.z
+                        new Vector3(
+                            localPosition.x * scale.x,
+                            localPosition.y * scale.y,
+                            localPosition.z * scale.z
                         )))
                     ;
             }
 
-            foreach (Transform child in parent)
+            foreach (Transform child in parent) SetupRecursive(center, child);
+        }
+
+        void LateUpdate()
+        {
+            if (m_updateType == SpringBoneUpdateType.LateUpdate)
             {
-                SetupRecursive(center, child);
+                UpdateProcess(Time.deltaTime);
+            }
+        }
+
+        void FixedUpdate()
+        {
+            if (m_updateType == SpringBoneUpdateType.FixedUpdate)
+            {
+                UpdateProcess(Time.fixedDeltaTime);
             }
         }
 
         public struct SphereCollider
         {
-            public Vector3 Position;
-            public float Radius;
+            // public Transform Transform;
+            public readonly Vector3 Position;
+            public readonly float Radius;
+
+            public SphereCollider(Transform transform, VRMSpringBoneColliderGroup.SphereCollider collider)
+            {
+                Position = transform.TransformPoint(collider.Offset);
+                var ls = transform.lossyScale;
+                var scale = Mathf.Max(ls.x, ls.y, ls.z);
+                Radius = scale * collider.Radius;
+            }
         }
 
-        List<SphereCollider> m_colliderList = new List<SphereCollider>();
-        void LateUpdate()
+        private List<SphereCollider> m_colliders = new List<SphereCollider>();
+        private void UpdateProcess(float deltaTime)
         {
             if (m_verlet == null || m_verlet.Count == 0)
             {
-                if (RootBones == null)
-                {
-                    return;
-                }
+                if (RootBones == null) return;
 
                 Setup();
             }
 
-            m_colliderList.Clear();
+            m_colliders.Clear();
             if (ColliderGroups != null)
             {
                 foreach (var group in ColliderGroups)
@@ -294,18 +291,14 @@ namespace VRM
                     {
                         foreach (var collider in group.Colliders)
                         {
-                            m_colliderList.Add(new SphereCollider
-                            {
-                                Position = group.transform.TransformPoint(collider.Offset),
-                                Radius = collider.Radius,
-                            });
+                            m_colliders.Add(new SphereCollider(group.transform, collider));
                         }
                     }
                 }
             }
 
-            var stiffness = m_stiffnessForce * Time.deltaTime;
-            var external = m_gravityDir * (m_gravityPower * Time.deltaTime);
+            var stiffness = m_stiffnessForce * deltaTime;
+            var external = m_gravityDir * (m_gravityPower * deltaTime);
 
             foreach (var verlet in m_verlet)
             {
@@ -314,20 +307,17 @@ namespace VRM
                     stiffness,
                     m_dragForce,
                     external,
-                    m_colliderList
-                    );
+                    m_colliders
+                );
             }
         }
 
         private void OnDrawGizmos()
         {
-            if (m_drawGizmo)
-            {
-                foreach (var verlet in m_verlet)
-                {
-                    verlet.DrawGizmo(m_center, m_hitRadius, m_gizmoColor);
-                }
-            }
+            if (!m_drawGizmo) return;
+
+            foreach (var verlet in m_verlet)
+                verlet.DrawGizmo(m_center, m_hitRadius, m_gizmoColor);
         }
     }
 }

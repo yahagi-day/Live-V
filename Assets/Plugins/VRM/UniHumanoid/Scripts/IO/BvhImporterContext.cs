@@ -117,9 +117,6 @@ namespace UniHumanoid
             renderer.sharedMaterial = Material;
             Mesh = renderer.sharedMesh;
             Mesh.name = "box-man";
-
-            Root.AddComponent<BoneMapping>();
-
         }
 
         static Transform BuildHierarchy(Transform parent, BvhNode node, float toMeter)
@@ -212,18 +209,9 @@ namespace UniHumanoid
                 AssetDatabase.AddObjectToAsset(o, path);
             }
 
-            // Create or upate Main Asset
-            if (File.Exists(path))
-            {
-                Debug.LogFormat("replace prefab: {0}", path);
-                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-                PrefabUtility.ReplacePrefab(Root, prefab, ReplacePrefabOptions.ReplaceNameBased);
-            }
-            else
-            {
-                Debug.LogFormat("create prefab: {0}", path);
-                PrefabUtility.CreatePrefab(path, Root);
-            }
+            // Create or update Main Asset
+            Debug.LogFormat("create prefab: {0}", path);
+            PrefabUtility.SaveAsPrefabAssetAndConnect(Root, path, InteractionMode.AutomatedAction);
 
             AssetDatabase.ImportAsset(path);
         }

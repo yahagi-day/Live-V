@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UniGLTF;
 using UnityEngine;
 using System.IO;
-
+using System.Collections;
 
 namespace VRM
 {
@@ -39,7 +39,7 @@ namespace VRM
         }
 
         #region OnLoad
-        protected override void OnLoadModel()
+        protected override IEnumerator OnLoadModel()
         {
             Root.name = "VRM";
 
@@ -47,21 +47,27 @@ namespace VRM
             {
                 LoadMeta();
             }
+            yield return null;
 
             using (MeasureTime("VRM LoadHumanoid"))
             {
                 LoadHumanoid();
             }
+            yield return null;
 
             using (MeasureTime("VRM LoadBlendShapeMaster"))
             {
                 LoadBlendShapeMaster();
             }
+            yield return null;
+
             using (MeasureTime("VRM LoadSecondary"))
             {
                 VRMSpringUtility.LoadSecondary(Root.transform, Nodes,
                 GLTF.extensions.VRM.secondaryAnimation);
             }
+            yield return null;
+
             using (MeasureTime("VRM LoadFirstPerson"))
             {
                 LoadFirstPerson();
@@ -101,6 +107,7 @@ namespace VRM
             {
                 // fallback
                 firstPerson.SetDefault();
+                firstPerson.FirstPersonOffset = gltfFirstPerson.firstPersonBoneOffset;
             }
             firstPerson.TraverseRenderers(this);
 
@@ -151,12 +158,12 @@ namespace VRM
             if (group != null)
             {
                 asset.BlendShapeName = groupName;
-                asset.Preset = EnumUtil.TryParseOrDefault<BlendShapePreset>(group.presetName);
+                asset.Preset = CacheEnum.TryParseOrDefault<BlendShapePreset>(group.presetName, true);
                 asset.IsBinary = group.isBinary;
                 if (asset.Preset == BlendShapePreset.Unknown)
                 {
                     // fallback
-                    asset.Preset = EnumUtil.TryParseOrDefault<BlendShapePreset>(group.name);
+                    asset.Preset = CacheEnum.TryParseOrDefault<BlendShapePreset>(group.name, true);
                 }
                 asset.Values = group.binds.Select(x =>
                 {
@@ -300,7 +307,7 @@ namespace VRM
                 // 作成する(先行ロード用)
                 if (gltfMeta.texture >= 0 && gltfMeta.texture < GLTF.textures.Count)
                 {
-                    var t = new TextureItem(gltfMeta.texture);
+                    var t = new TextureItem(gltfMeta.texture, CreateTextureLoader(gltfMeta.texture));
                     t.Process(GLTF, Storage);
                     meta.Thumbnail = t.Texture;
                 }
@@ -366,6 +373,24 @@ namespace VRM
                 || o is BlendShapeClip)
             {
                 var dir = prefabPath.GetAssetFolder(".BlendShapes");
+                var assetPath = dir.Child(o.name.EscapeFilePath() + ".asset");
+                return assetPath;
+            }
+            else if (o is Avatar)
+            {
+                var dir = prefabPath.GetAssetFolder(".Avatar");
+                var assetPath = dir.Child(o.name.EscapeFilePath() + ".asset");
+                return assetPath;
+            }
+            else if (o is VRMMetaObject)
+            {
+                var dir = prefabPath.GetAssetFolder(".MetaObject");
+                var assetPath = dir.Child(o.name.EscapeFilePath() + ".asset");
+                return assetPath;
+            }
+            else if (o is UniHumanoid.AvatarDescription)
+            {
+                var dir = prefabPath.GetAssetFolder(".AvatarDescription");
                 var assetPath = dir.Child(o.name.EscapeFilePath() + ".asset");
                 return assetPath;
             }
