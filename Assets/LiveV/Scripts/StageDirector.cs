@@ -1,4 +1,4 @@
-﻿using UniRx.Async;
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -11,6 +11,7 @@ namespace Live_V
         //Prefab読み込み
         public GameObject MusicPlayer;
         public GameObject MainCameraRig;
+        public GameObject SubCameraRig;
         public GameObject[] prefabsNeedsActivation;
         public GameObject[] miscPrefabs;
         public GameObject LipSync;
@@ -24,7 +25,9 @@ namespace Live_V
         //Instatiate後操作用
         GameObject musicPlayer;
         CameraSwitcher mainCameraSwitcher;
+        CameraSwitcher SubCameraRigContoller;
         GameObject[] objectsNeedsActivation;
+        private GameObject PropActivatorObjects;
         GameObject VRMAvaterController;
         GameObject LipsSyncContoller;
         VRMImporterContext context;
@@ -49,9 +52,9 @@ namespace Live_V
             {
                 DefaulteyePos =  new Vector3(0, 0.7f, 0); //シヴィちゃん基準
             }
-            if(SceneManager.GetActiveScene().name == "DeepDusk")
+            if(SceneManager.GetActiveScene().name == "UnityChanCRS")
             {
-                DefaulteyePos = new Vector3(-4.4f, 1.3f, -1.5f);
+                DefaulteyePos = new Vector3(0, 0.7f, 0);
             }
             //PrefabをInstantiateするよ!!
             musicPlayer = (GameObject)Instantiate(MusicPlayer);
@@ -63,6 +66,7 @@ namespace Live_V
             objectsNeedsActivation = new GameObject[prefabsNeedsActivation.Length];
             for (var i = 0; i < prefabsNeedsActivation.Length; i++)
                 objectsNeedsActivation[i] = (GameObject)Instantiate(prefabsNeedsActivation[i]);
+            
 #if UNITY_WEBGL
             VRMAvaterController = LoadVRMAvater();
 #else
@@ -76,11 +80,18 @@ namespace Live_V
             var VRMAnimator = VRMAvaterController.GetComponent<Animator>();
             var eye = transform.TransformPoint(VRMAnimator.GetBoneTransform(HumanBodyBones.LeftEye).transform.position);
             var eyediff = eye - DefaulteyePos;
-            Debug.Log(eye);
             var campos = cameraRig.GetComponentInChildren<FindObject>().FindGameObject();
             foreach (Transform child in transform) child.position += eyediff;
             foreach (Transform child in campos.transform) child.position += eyediff;
             cameraRig.SetActive(true);
+
+            if (SubCameraRig != null)
+            {
+                var subcamerarig = (GameObject) Instantiate(SubCameraRig);
+                SubCameraRigContoller = subcamerarig.GetComponentInChildren<CameraSwitcher>();
+                SubCameraRigContoller.vrm = VRMAvaterController;
+                subcamerarig.SetActive(true);
+            }
 
             LipsSyncContoller = (GameObject)Instantiate(LipSync);
             LipsSyncContoller.GetComponent<LipSyncController>().target = VRMAvaterController.GetComponent<VRMBlendShapeProxy>();

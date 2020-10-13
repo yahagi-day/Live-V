@@ -25,8 +25,9 @@ namespace UniGLTF
         /// Call from unity main thread
         /// </summary>
         /// <param name="isLinear"></param>
+        /// <param name="sampler"></param>
         /// <returns></returns>
-        IEnumerator ProcessOnMainThread(bool isLinear);
+        IEnumerator ProcessOnMainThread(bool isLinear, glTFTextureSampler sampler);
     }
 
 #if UNITY_EDITOR
@@ -53,7 +54,7 @@ namespace UniGLTF
         {
         }
 
-        public IEnumerator ProcessOnMainThread(bool isLinear)
+        public IEnumerator ProcessOnMainThread(bool isLinear, glTFTextureSampler sampler)
         {
             //
             // texture from assets
@@ -64,16 +65,38 @@ namespace UniGLTF
             {
                 Debug.LogWarningFormat("fail to get TextureImporter: {0}", m_assetPath);
             }
+            importer.maxTextureSize = 8192;
             importer.sRGBTexture = !isLinear;
+
             importer.SaveAndReimport();
 
             Texture = m_assetPath.LoadAsset<Texture2D>();
+
             //Texture.name = m_textureName;
             if (Texture == null)
             {
                 Debug.LogWarningFormat("fail to Load Texture2D: {0}", m_assetPath);
             }
 
+            else
+            {
+                var maxSize = Mathf.Max(Texture.width, Texture.height);
+
+                importer.maxTextureSize
+                    = maxSize > 4096 ? 8192 :
+                    maxSize > 2048 ? 4096 :
+                    maxSize > 1024 ? 2048 :
+                    maxSize > 512 ? 1024 :
+                    512;
+
+                importer.SaveAndReimport();
+            }
+            
+            if (sampler != null)
+            {
+                TextureSamplerUtil.SetSampler(Texture, sampler);
+            }
+            
             yield break;
         }
     }
@@ -124,7 +147,7 @@ namespace UniGLTF
             m_imageBytes = ToArray(segments);
         }
 
-        public IEnumerator ProcessOnMainThread(bool isLinear)
+        public IEnumerator ProcessOnMainThread(bool isLinear, glTFTextureSampler sampler)
         {
             //
             // texture from image(png etc) bytes
@@ -134,6 +157,10 @@ namespace UniGLTF
             if (m_imageBytes != null)
             {
                 Texture.LoadImage(m_imageBytes);
+            }
+            if (sampler != null)
+            {
+                TextureSamplerUtil.SetSampler(Texture, sampler);
             }
             yield break;
         }
@@ -258,7 +285,7 @@ namespace UniGLTF
             }
         }
 
-        public IEnumerator ProcessOnMainThread(bool isLinear)
+        public IEnumerator ProcessOnMainThread(bool isLinear, glTFTextureSampler sampler)
         {
             // tmp file
             var tmp = Path.GetTempFileName();
@@ -311,6 +338,10 @@ namespace UniGLTF
 #else
 #error Unsupported Unity version
 #endif
+            }
+            if (sampler != null)
+            {
+                TextureSamplerUtil.SetSampler(Texture, sampler);
             }
         }
     }

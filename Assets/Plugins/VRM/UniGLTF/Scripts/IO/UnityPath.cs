@@ -57,6 +57,11 @@ namespace UniGLTF
             }
         }
 
+        public string FileName
+        {
+            get { return Path.GetFileName(Value); }
+        }
+
         public string FileNameWithoutExtension
         {
             get { return Path.GetFileNameWithoutExtension(Value); }
@@ -286,7 +291,13 @@ namespace UniGLTF
         }
         #endregion
 
+        [Obsolete("Use TraverseDir()")]
         public IEnumerable<UnityPath> TravserseDir()
+        {
+            return TraverseDir();
+        }
+
+        public IEnumerable<UnityPath> TraverseDir()
         {
             if (IsDirectoryExists)
             {
@@ -294,7 +305,7 @@ namespace UniGLTF
 
                 foreach(var child in ChildDirs)
                 {
-                    foreach(var x in child.TravserseDir())
+                    foreach(var x in child.TraverseDir())
                     {
                         yield return x;
                     }

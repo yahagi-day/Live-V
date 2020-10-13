@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4135615046106028457}
   - component: {fileID: 6088031507818752485}
   - component: {fileID: 5065596179571808523}
+  - component: {fileID: 843371391740921232}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -63,7 +64,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1824
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -93,7 +94,7 @@ MonoBehaviour:
     m_Bits: 1792
   stopNaNPropagation: 1
   finalBlitToCameraTarget: 1
-  antialiasingMode: 2
+  antialiasingMode: 1
   temporalAntialiasing:
     jitterSpread: 0.75
     sharpness: 0.25
@@ -135,6 +136,26 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &843371391740921232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87958555253674606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d637268abbbb5428e991dd9ec93136f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionFrequency: 0.3
+  rotationFrequency: 0.26
+  positionAmount: 0.05
+  rotationAmount: 0.2
+  positionComponents: {x: 1, y: 1, z: 1}
+  rotationComponents: {x: 1, y: 1, z: 0}
+  positionOctave: 3
+  rotationOctave: 3
 --- !u!1 &164973353698643363
 GameObject:
   m_ObjectHideFlags: 0
@@ -320,7 +341,7 @@ MonoBehaviour:
   - {fileID: 3689086884245433778}
   - {fileID: 3739284985342528978}
   - {fileID: 6494052422494921033}
-  interval: 3.4
+  interval: 6
   stability: 0.5
   rotationSpeed: 2
   minDistance: 0.5
@@ -359,6 +380,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   autoChange: 0
   StartCameraPos: {fileID: 5508492663577894062}
+  AutoDis: 1
 --- !u!1 &1183415535257082685
 GameObject:
   m_ObjectHideFlags: 0

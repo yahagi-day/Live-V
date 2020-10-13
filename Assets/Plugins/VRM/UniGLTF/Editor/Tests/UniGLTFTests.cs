@@ -57,7 +57,7 @@ namespace UniGLTF
                 using (var exporter = new gltfExporter(gltf))
                 {
                     exporter.Prepare(go);
-                    exporter.Export();
+                    exporter.Export(MeshExportSettings.Default);
 
                     // remove empty buffer
                     gltf.buffers.Clear();
@@ -74,7 +74,7 @@ namespace UniGLTF
             }
             finally
             {
-                //Debug.LogFormat("Destory, {0}", go.name);
+                //Debug.LogFormat("Destroy, {0}", go.name);
                 GameObject.DestroyImmediate(go);
                 context.EditorDestroyRootAndAssets();
             }
@@ -133,7 +133,7 @@ namespace UniGLTF
             var hoge = UnityPath.FromUnityPath("Assets/Hoge");
             Assert.AreEqual(assetsChild, hoge);
 
-            //var children = root.TravserseDir().ToArray();
+            //var children = root.TraverseDir().ToArray();
         }
 
         [Test]
@@ -271,7 +271,7 @@ namespace UniGLTF
             };
 
             var json = model.ToJson();
-            Assert.AreEqual(@"{""name"":""a"",""emissiveFactor"":[0.5,0.5,0.5],""doubleSided"":false}", json);
+            Assert.AreEqual(@"{""name"":""a"",""pbrMetallicRoughness"":{""baseColorFactor"":[1,1,1,1],""metallicFactor"":1,""roughnessFactor"":1},""emissiveFactor"":[0.5,0.5,0.5],""doubleSided"":false}", json);
             Debug.Log(json);
 
             var c = new JsonSchemaValidationContext("")
@@ -279,7 +279,7 @@ namespace UniGLTF
                 EnableDiagnosisForNotRequiredFields = true,
             };
             var json2 = JsonSchema.FromType<glTFMaterial>().Serialize(model, c);
-            Assert.AreEqual(@"{""name"":""a"",""emissiveFactor"":[0.5,0.5,0.5],""doubleSided"":false}", json2);
+            Assert.AreEqual(@"{""name"":""a"",""pbrMetallicRoughness"":{""baseColorFactor"":[1,1,1,1],""metallicFactor"":1,""roughnessFactor"":1},""emissiveFactor"":[0.5,0.5,0.5],""doubleSided"":false}", json2);
         }
 
         [Test]
@@ -297,7 +297,7 @@ namespace UniGLTF
                 EnableDiagnosisForNotRequiredFields = true,
             };
             var json = JsonSchema.FromType<glTFMaterial>().Serialize(model, c);
-            Assert.AreEqual(@"{""name"":""a"",""emissiveFactor"":[0.5,0.5,0.5],""alphaMode"":""MASK"",""alphaCutoff"":0.5,""doubleSided"":false}", json);
+            Assert.AreEqual(@"{""name"":""a"",""pbrMetallicRoughness"":{""baseColorFactor"":[1,1,1,1],""metallicFactor"":1,""roughnessFactor"":1},""emissiveFactor"":[0.5,0.5,0.5],""alphaMode"":""MASK"",""alphaCutoff"":0.5,""doubleSided"":false}", json);
         }
 
         [Test]
@@ -307,7 +307,7 @@ namespace UniGLTF
             using (var exporter = new gltfExporter(gltf))
             {
                 exporter.Prepare(CreateSimpleScene());
-                exporter.Export();
+                exporter.Export(MeshExportSettings.Default);
             }
 
             var expected = gltf.ToJson().ParseAsJson();
@@ -629,7 +629,7 @@ namespace UniGLTF
                 using (var exporter = new gltfExporter(gltf))
                 {
                     exporter.Prepare(go);
-                    exporter.Export();
+                    exporter.Export(UniGLTF.MeshExportSettings.Default);
 
                     json = gltf.ToJson();
                 }
@@ -666,10 +666,7 @@ namespace UniGLTF
 
                 // import new version
                 {
-                    var context = new ImporterContext
-                    {
-                        UseUniJSONParser = true
-                    };
+                    var context = new ImporterContext();
                     context.ParseJson(json, new SimpleStorage(new ArraySegment<byte>(new byte[1024 * 1024])));
                     //Debug.LogFormat("{0}", context.Json);
                     context.Load();
@@ -705,7 +702,7 @@ namespace UniGLTF
         [Serializable]
         class Dummy
         {
-            public CantConstruct Value;
+            public CantConstruct Value = default;
         }
 
         [Test]

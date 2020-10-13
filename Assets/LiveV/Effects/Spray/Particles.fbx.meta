@@ -1,258 +1,112 @@
 fileFormatVersion: 2
 guid: 51ae9ddd94f9f4060885944ddecb3519
 ModelImporter:
-  serializedVersion: 25
-  internalIDToNameTable:
-  - first:
-      1: 100000
-    second: effChip01
-  - first:
-      1: 100002
-    second: effChip02
-  - first:
-      1: 100004
-    second: effChip03
-  - first:
-      1: 100006
-    second: effChip04
-  - first:
-      1: 100008
-    second: effChip05
-  - first:
-      1: 100010
-    second: effChip06
-  - first:
-      1: 100012
-    second: effChip07
-  - first:
-      1: 100014
-    second: effChip08
-  - first:
-      1: 100016
-    second: effChip09
-  - first:
-      1: 100018
-    second: effChip10
-  - first:
-      1: 100020
-    second: //RootNode
-  - first:
-      4: 400000
-    second: effChip01
-  - first:
-      4: 400002
-    second: effChip02
-  - first:
-      4: 400004
-    second: effChip03
-  - first:
-      4: 400006
-    second: effChip04
-  - first:
-      4: 400008
-    second: effChip05
-  - first:
-      4: 400010
-    second: effChip06
-  - first:
-      4: 400012
-    second: effChip07
-  - first:
-      4: 400014
-    second: effChip08
-  - first:
-      4: 400016
-    second: effChip09
-  - first:
-      4: 400018
-    second: effChip10
-  - first:
-      4: 400020
-    second: //RootNode
-  - first:
-      23: 2300000
-    second: effChip01
-  - first:
-      23: 2300002
-    second: effChip02
-  - first:
-      23: 2300004
-    second: effChip03
-  - first:
-      23: 2300006
-    second: effChip04
-  - first:
-      23: 2300008
-    second: effChip05
-  - first:
-      23: 2300010
-    second: effChip06
-  - first:
-      23: 2300012
-    second: effChip07
-  - first:
-      23: 2300014
-    second: effChip08
-  - first:
-      23: 2300016
-    second: effChip09
-  - first:
-      23: 2300018
-    second: effChip10
-  - first:
-      33: 3300000
-    second: effChip01
-  - first:
-      33: 3300002
-    second: effChip02
-  - first:
-      33: 3300004
-    second: effChip03
-  - first:
-      33: 3300006
-    second: effChip04
-  - first:
-      33: 3300008
-    second: effChip05
-  - first:
-      33: 3300010
-    second: effChip06
-  - first:
-      33: 3300012
-    second: effChip07
-  - first:
-      33: 3300014
-    second: effChip08
-  - first:
-      33: 3300016
-    second: effChip09
-  - first:
-      33: 3300018
-    second: effChip10
-  - first:
-      43: 4300000
-    second: effChip01
-  - first:
-      43: 4300002
-    second: effChip02
-  - first:
-      43: 4300004
-    second: effChip03
-  - first:
-      43: 4300006
-    second: effChip04
-  - first:
-      43: 4300008
-    second: effChip05
-  - first:
-      43: 4300010
-    second: effChip06
-  - first:
-      43: 4300012
-    second: effChip07
-  - first:
-      43: 4300014
-    second: effChip08
-  - first:
-      43: 4300016
-    second: effChip09
-  - first:
-      43: 4300018
-    second: effChip10
-  - first:
-      95: 9500000
-    second: //RootNode
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: effector
-    second: {fileID: 2100000, guid: c3506554911b34be2a7401822105d9ee, type: 2}
+  serializedVersion: 16
+  fileIDToRecycleName:
+    100000: effChip01
+    100002: effChip02
+    100004: effChip03
+    100006: effChip04
+    100008: effChip05
+    100010: effChip06
+    100012: effChip07
+    100014: effChip08
+    100016: effChip09
+    100018: effChip10
+    100020: //RootNode
+    400000: effChip01
+    400002: effChip02
+    400004: effChip03
+    400006: effChip04
+    400008: effChip05
+    400010: effChip06
+    400012: effChip07
+    400014: effChip08
+    400016: effChip09
+    400018: effChip10
+    400020: //RootNode
+    2300000: effChip01
+    2300002: effChip02
+    2300004: effChip03
+    2300006: effChip04
+    2300008: effChip05
+    2300010: effChip06
+    2300012: effChip07
+    2300014: effChip08
+    2300016: effChip09
+    2300018: effChip10
+    3300000: effChip01
+    3300002: effChip02
+    3300004: effChip03
+    3300006: effChip04
+    3300008: effChip05
+    3300010: effChip06
+    3300012: effChip07
+    3300014: effChip08
+    3300016: effChip09
+    3300018: effChip10
+    4300000: effChip01
+    4300002: effChip02
+    4300004: effChip03
+    4300006: effChip04
+    4300008: effChip05
+    4300010: effChip06
+    4300012: effChip07
+    4300014: effChip08
+    4300016: effChip09
+    4300018: effChip10
+    9500000: //RootNode
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
-    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
-    rigImportErrors: 
-    rigImportWarnings: 
-    animationImportErrors: 
-    animationImportWarnings: 
-    animationRetargetingWarnings: 
-    animationDoRetargetingWarnings: 0
-    importAnimatedCustomProperties: 0
-    importConstraints: 0
     animationCompression: 1
-    animationRotationError: 0.5
-    animationPositionError: 0.5
-    animationScaleError: 0.5
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    extraUserProperties: []
     clipAnimations: []
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.01
+    globalScale: .00999999978
     meshCompression: 0
     addColliders: 0
-    useSRGBMaterialColor: 1
-    importVisibility: 0
     importBlendShapes: 0
-    importCameras: 0
-    importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    keepQuads: 0
+    optimizeMeshForGPU: 1
     weldVertices: 1
-    preserveHierarchy: 0
-    skinWeightsMode: 0
-    maxBonesPerVertex: 4
-    minBoneWeight: 0.001
-    meshOptimizationFlags: -1
-    indexFormat: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
     normalImportMode: 0
-    tangentImportMode: 4
-    normalCalculationMode: 0
-    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
-    blendShapeNormalImportMode: 1
-    normalSmoothingSource: 0
-  referencedClips: []
+    tangentImportMode: 1
   importAnimation: 0
   copyAvatar: 0
   humanDescription:
-    serializedVersion: 3
     human: []
     skeleton: []
-    armTwist: 0.5
-    foreArmTwist: 0.5
-    upperLegTwist: 0.5
-    legTwist: 0.5
-    armStretch: 0.05
-    legStretch: 0.05
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
     feetSpacing: 0
-    globalScale: 0.01
     rootMotionBoneName: 
-    hasTranslationDoF: 0
-    hasExtraRoot: 0
-    skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 0
-  humanoidOversampling: 1
   additionalBone: 0
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 

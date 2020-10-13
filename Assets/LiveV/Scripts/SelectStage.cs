@@ -10,7 +10,7 @@ public class SelectStage : MonoBehaviour
         StageName = new Dictionary<int, string>()
         {
             {1, "Underground" },
-            {2, "DeepDusk" },
+            {2, "UnityChanCRS" },
         };
     }
 
