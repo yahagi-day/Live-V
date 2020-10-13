@@ -5,7 +5,7 @@ public class CameraSwitcher : MonoBehaviour
 {
     public GameObject vrm;
     public Transform[] points;
-    public float interval = 2.0f;
+    public float interval;
     public float stability = 0.5f;
     public float rotationSpeed = 2.0f;
     public float minDistance = 0.5f;
@@ -22,7 +22,7 @@ public class CameraSwitcher : MonoBehaviour
     {
         // Target information.
         humanoid = vrm.GetComponent<Animator>();
-        target = humanoid.GetBoneTransform(HumanBodyBones.Neck);
+        target = humanoid.GetBoneTransform(HumanBodyBones.Head);
         followPoint = target.position;
         ChangePosition(StartCameraPos, true);
 
@@ -52,17 +52,19 @@ public class CameraSwitcher : MonoBehaviour
 
     private void CameraDistanceControl()
     {
-        var mindis = 0.35f;
-        var vrmpos = vrm.GetComponent<Animator>().GetBoneTransform(HumanBodyBones.Head).position;
+        var mindis = 0.5f;
+        var vrmposchest = vrm.GetComponent<Animator>().GetBoneTransform(HumanBodyBones.Chest).position;
+        var vrmposthead = vrm.GetComponent<Animator>().GetBoneTransform(HumanBodyBones.Head).position;
         var campos = this.gameObject.transform.position;
-        var dis = Vector3.Distance(campos, vrmpos);
-        if (mindis >= dis)
+        var dischest = Vector3.Distance(campos, vrmposchest);
+        var dishead = Vector3.Distance(campos, vrmposthead);
+        if (mindis >= dischest || mindis >= dishead)
         {
             var direction = this.gameObject.transform.rotation * Vector3.forward;
-            transform.position += direction * -0.1f * Time.deltaTime;
+            transform.position += direction * -0.5f * Time.deltaTime;
 
         }
-        Debug.Log(dis);
+        //Debug.Log(dis);
     }
 
     // Change the camera position.
