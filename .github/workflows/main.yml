@@ -7,6 +7,9 @@ name: Build
 on:
   push:
     branches: [ master ]
+    
+env:
+  UNITY_VERSION: 2019.4.13f1 
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -24,7 +27,7 @@ jobs:
       
       - name: Unity Build
         shell: cmd
-        run: "C:\Program Files\Unity\Hub\Editor\2019.4.131\Editor\Unity.exe" -quit -batchmode -projectPath "D:\unity\Live-V" -executeMethod CI.Build -buildTarget StandaloneWindows64
+        run: /%PROGRAMFILES%/Unity/Hub/Editor/$UNITY_VERSION/Editor/Unity -quit -batchmode -projectPath "D:\unity\Live-V" -executeMethod CI.Build -buildTarget StandaloneWindows64
         
       - name: Relese
         run: Copy-Item Build\Live-V.exe D:\unity\Live-V\Build\Live-V${{ github.run_number }}.exe
