@@ -27,7 +27,8 @@ jobs:
       
       - name: Unity Build
         shell: cmd
-        run: /"C:\Program Files\Unity\Hub/Editor\$UNITY_VERSION\Editor\Unity.exe" -quit -batchmode -projectPath ./ -executeMethod CI.Build -buildTarget StandaloneWindows64
+        run: | 
+          "C:\Program Files\Unity\Hub/Editor\$UNITY_VERSION\Editor\Unity.exe" -quit -batchmode -projectPath ./ -executeMethod CI.Build -buildTarget StandaloneWindows64
         
       - name: Relese
         run: Copy-Item Build\Live-V.exe D:\unity\Live-V\Build\Live-V${{ github.run_number }}.exe
