@@ -25,4 +25,4 @@ jobs:
       - name: Unity Build
         shell: cmd
         run: | 
-          "C:\Program Files\Unity\Hub/Editor\2019.4.13f1\Editor\Unity.exe" -quit -batchmode -projectPath ./ -executeMethod CI.Build -buildTarget StandaloneWindows64 -nographics -logFile -
+          "C:\Program Files\Unity\Hub/Editor\2019.4.13f1\Editor\Unity.exe" -quit -batchmode -projectPath ./ -executeMethod CI.WindowsBuild -buildTarget StandaloneWindows64 -nographics -logFile -

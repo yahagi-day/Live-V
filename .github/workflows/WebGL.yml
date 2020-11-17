@@ -27,4 +27,4 @@ jobs:
       - name: Unity Build
         shell: cmd
         run: |
-          "C:\Program Files\Unity\Hub/Editor\2019.4.13f1\Editor\Unity.exe" -quit -batchmode -projectPath ./ -executeMethod CI.Build -buildTarget WebGL -nographics -logFile -
+          "C:\Program Files\Unity\Hub/Editor\2019.4.13f1\Editor\Unity.exe" -quit -batchmode -projectPath ./ -executeMethod CI.WebGLBuild -buildTarget WebGL -nographics -logFile -
