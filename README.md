@@ -2,6 +2,7 @@
 VRMファイルでライブを見よう！！
 
 ![Windows](https://github.com/yahagi-day/Live-V/workflows/Windows/badge.svg)
+![WebGL](https://github.com/yahagi-day/Live-V/workflows/WebGL/badge.svg)
 
 # Windows版
 <img src="Assets/LiveV/Textures/Underground.png" width="600">
