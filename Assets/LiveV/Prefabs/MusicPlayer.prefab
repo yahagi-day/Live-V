@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 8814843365549875257}
   - component: {fileID: 2254752869388666682}
   - component: {fileID: 204016338780387660}
+  - component: {fileID: 7489771553295105247}
   m_Layer: 0
   m_Name: Spectrum 4
   m_TagString: Untagged
@@ -436,6 +437,18 @@ MonoBehaviour:
   dynamicRange: 10
   lowerBound: -60
   falldown: 0.5
+--- !u!114 &7489771553295105247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4862629150046444311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3afd83c4b50071e49846edaec44c127e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5153358646084797821
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,6 +462,7 @@ GameObject:
   - component: {fileID: 8906976359459034500}
   - component: {fileID: 152556997198750004}
   - component: {fileID: 9099875047231327708}
+  - component: {fileID: 6422685606612705501}
   m_Layer: 0
   m_Name: Spectrum 2
   m_TagString: Untagged
@@ -701,6 +715,18 @@ MonoBehaviour:
   dynamicRange: 10
   lowerBound: -60
   falldown: 0.5
+--- !u!114 &6422685606612705501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5153358646084797821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3afd83c4b50071e49846edaec44c127e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6898838730976458216
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,6 +740,7 @@ GameObject:
   - component: {fileID: 1655280286655332271}
   - component: {fileID: 286307166854279478}
   - component: {fileID: 2536087357580414093}
+  - component: {fileID: 9119612156333057372}
   m_Layer: 0
   m_Name: Spectrum 3
   m_TagString: Untagged
@@ -966,6 +993,18 @@ MonoBehaviour:
   dynamicRange: 10
   lowerBound: -60
   falldown: 0.5
+--- !u!114 &9119612156333057372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6898838730976458216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3afd83c4b50071e49846edaec44c127e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7272080334976562336
 GameObject:
   m_ObjectHideFlags: 0
@@ -979,6 +1018,7 @@ GameObject:
   - component: {fileID: 5708881649082192390}
   - component: {fileID: 7959871194152666163}
   - component: {fileID: 4437040224126135341}
+  - component: {fileID: 1764014400287134704}
   m_Layer: 0
   m_Name: Spectrum 1
   m_TagString: Untagged
@@ -1231,3 +1271,15 @@ MonoBehaviour:
   dynamicRange: 10
   lowerBound: -60
   falldown: 0.5
+--- !u!114 &1764014400287134704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7272080334976562336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3afd83c4b50071e49846edaec44c127e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
